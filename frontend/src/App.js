@@ -11,6 +11,7 @@ import Incubations from './pages/Incubations';
 import Assets from './pages/Assets';
 import Protocol from './pages/Protocol';
 import './App.css';
+import './watchlist.css';
 
 function Experience() {
   const { state, catalog, error, retry } = useDemo();

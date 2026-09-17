@@ -29,7 +29,7 @@ def settle(state):
         state['total_burned'] += run['burned']
         event(state, 'ready', f"{run['pod_id'].upper()} incubation complete", amount, asset['symbol'])
         event(state, 'return', '75% INC returned to your balance', run['returned'], 'INC')
-        event(state, 'burn', '25% INC permanently removed from demo supply', run['burned'], 'INC')
+        event(state, 'burn', '25% INC permanently removed from supply', run['burned'], 'INC')
 
 
 async def mutate(db, session_id, operation=None):
@@ -38,7 +38,7 @@ async def mutate(db, session_id, operation=None):
     for _ in range(20):
         state = await db.demo_workspaces.find_one({'id': session_id}, {'_id': 0})
         if state is None:
-            raise HTTPException(404, 'Demo workspace not found')
+            raise HTTPException(404, 'Workspace not found')
         previous = state['version']
         settle(state)
         if operation:

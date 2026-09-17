@@ -30,7 +30,7 @@ export function DemoProvider({ children }) {
         localStorage.setItem('inc-hood-demo', data.id);
       }
       if (alive.current) { setCatalog(c.data); accept(data); }
-    } catch (e) { if (alive.current) setError('The demo could not connect. Please try again.'); }
+    } catch (e) { if (alive.current) setError('Unable to connect. Please try again.'); }
   }, [accept]);
   useEffect(() => { alive.current = true; initialize(); return () => { alive.current = false; }; }, [initialize]);
   useEffect(() => {

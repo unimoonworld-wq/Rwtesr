@@ -60,9 +60,9 @@ async def start(session_id: str, body: StartRequest):
         if any(r['pod_id'] == body.pod_id and r['status'] != 'claimed' for r in state['runs']):
             raise HTTPException(409, 'This pod already has an incubation. Claim its reward first.')
         if state['balance'] < body.amount:
-            raise HTTPException(400, 'Not enough INC. Add demo funds from your balance panel.')
+            raise HTTPException(400, 'Not enough INC. Add INC from your balance panel.')
         if len(state['runs']) >= 200:
-            raise HTTPException(400, 'Demo history is full. Reset your sandbox to continue.')
+            raise HTTPException(400, 'History is full. Reset your workspace to continue.')
         state['balance'] -= body.amount
         run = Incubation(id=str(uuid.uuid4()), pod_id=body.pod_id, amount=body.amount,
                          started_at=time.time(), completes_at=time.time() + 7200)
@@ -104,9 +104,9 @@ async def settings(session_id: str, body: SettingsRequest):
 async def top_up(session_id: str):
     def operation(state):
         if state['balance'] > 990000:
-            raise HTTPException(400, 'Demo balance limit reached')
+            raise HTTPException(400, 'Balance limit reached')
         state['balance'] += 10000
-        event(state, 'deposit', 'Demo INC added', 10000, 'INC')
+        event(state, 'deposit', 'INC added to your balance', 10000, 'INC')
     return await mutate(db, session_id, operation)
 
 

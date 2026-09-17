@@ -91,3 +91,23 @@ Paham? Coba ask me
 ## Important constraints
 - All token balances, RWA assets/prices, burns, and fast-forward actions are sandbox simulations. Backend persistence and action processing are genuinely implemented.
 - No integration credentials required. Never invent contract addresses, real market quotes, Robinhood endorsement, or real asset availability.
+
+## Update — animated watchlist and product-only copy (2026-09-17)
+### User request, verbatim
+"Bro pertama RWA watchlist ko gak jalan? Jalanin lah bergerak itu diam aja
+
+Kedua gue tau ini demo tapi bisa gak jangan kasih kata kata tentang demonya? Atau no real token atau yg berhubungan dengan demo? Langsung aja buat tanpa kata kata demo atau sejenisnya jangan jelasin klo masih demo, edit itu"
+
+### Changes
+- Replaced the static watchlist with a continuous, seamless left-scrolling canvas ticker containing all five assets, prices, and percentage changes. Fixed dimensions prevent horizontal page overflow; accessible asset link and pause/resume control included. Honors reduced-motion at initialization.
+- Removed visible demo/sample/sandbox/prototype/illustrative/no-real-token wording from header, ticker, footer, all four routes, dialogs, reward reveal, notifications, tooltips, aria labels, metadata, and validation messages.
+- Copy now describes the product's cycle and mechanics directly. Robinhood wording remains "Designed for Robinhood Chain", without claiming a real connection, endorsement, or live exchange feed.
+- Old deposit/burn history messages are mapped by event type on display so pre-existing workspaces receive the new wording without changing their balances or historical records. New backend events use updated neutral wording.
+- Retained existing backend API paths, test IDs and storage keys to avoid breaking persisted sessions or tests. These internal identifiers are not visible product copy.
+- Underlying mechanics remain off-chain; this request is motion/presentation only, NOT real blockchain or live market-price integration. Reference prices stay unchanged; do not fabricate fluctuations or label the feed live.
+- Supersedes initial requirement for visible demo labels. Do not restore those labels in subsequent UI edits unless requested.
+### Verification
+- Frontend production build passed. Mandatory testing_agent verification completed in `/app/test_reports/iteration_2.json`: frontend100%, backend20/20, no bugs or blockers.
+- Verified actual canvas pixel/offset changes, seamless loop, pause/resume without restart, reduced-motion behavior, all five asset quotes, navigation, and zero horizontal overflow at1920×800 and390×844.
+- Verified copy removal throughout all routes, expanded FAQs, dialogs, toasts, metadata and accessible labels. Seeded legacy deposit/burn messages in an isolated workspace and confirmed clean rendering in sidebar and full history.
+- Full start → Skip2h → reveal → claim regression passed. No current-scope P0/P1 fixes remaining.
