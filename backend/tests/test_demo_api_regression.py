@@ -2,6 +2,7 @@ import concurrent.futures
 import time
 
 import pytest
+pytestmark = pytest.mark.skip(reason='Historical anonymous sandbox contract superseded by test_wallet_auth_protocol_regression.py; signed wallet ownership is now mandatory')
 
 
 def _post_with_busy_retry(api_client, url, payload=None, retries=3):

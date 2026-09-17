@@ -111,3 +111,46 @@ Kedua gue tau ini demo tapi bisa gak jangan kasih kata kata tentang demonya? Ata
 - Verified actual canvas pixel/offset changes, seamless loop, pause/resume without restart, reduced-motion behavior, all five asset quotes, navigation, and zero horizontal overflow at1920×800 and390×844.
 - Verified copy removal throughout all routes, expanded FAQs, dialogs, toasts, metadata and accessible labels. Seeded legacy deposit/burn messages in an isolated workspace and confirmed clean rendering in sidebar and full history.
 - Full start → Skip2h → reveal → claim regression passed. No current-scope P0/P1 fixes remaining.
+
+## Update — shared protocol, real wallet connection, Docs and reward cards (2026-09-17)
+### Latest requirements
+- User approved downloadable/shareable Inc.hood-branded reward cards.
+- Remove second-person/individual framing (you, your, my) throughout UI, notifications and accessible text; use public protocol/community perspective.
+- Explicit choice: REAL MetaMask/injected EVM Connect Wallet before Buy/Start, without blockchain transactions.
+- Explicit choice: aggregate public statistics/activity across participating wallets; individual wallet balances, claims and allocations must remain wallet-scoped.
+- Prominent public Docs button in header including mobile; elegant detailed Docs explaining about, 2-hour incubation, 75% return/25% burn, random RWA assets, rarity tier drop rates and estimated ranges.
+- Preserve prior request to omit visible demo/sandbox disclaimers. All technical implementation facts remain documented here.
+
+### Architecture and implementation
+- Real EIP-6963 discovery / EIP-1193 fallback. eth_requestAccounts and personal_sign only; no sendTransaction, contracts, chain switch, RPC or WalletConnect keys. No fake connection when provider absent.
+- SIWE-format exact server-issued public-domain message, random alphanumeric nonce, five-minute expiry, cryptographic eth-account signature recovery, atomic nonce consumption, capped attempts. EOA wallets only.
+- Opaque eight-hour HttpOnly Secure cookie session. Each normalized wallet address maps uniquely to one Mongo allocation workspace. All legacy private endpoints now require a valid signature-authenticated session AND matching workspace owner. Old anonymous workspaces retained but inaccessible through private endpoints and excluded from community totals. No unsigned migration or balance claim.
+- No email/password accounts. Initial new-wallet internal balance10,000INC; same-wallet reconnect restores ledger. Internal INC/RWA balances and burn remain off-chain, as user explicitly requested no transactions.
+- Ledger reset retired for authenticated wallets to preserve allocation history and communal burn totals. Configurable future commitment and internal top-up remain wallet-protected.
+- Added background settlement every5s and public-read settlement of expired wallet cycles. Public Mongo aggregation covers global locked INC, generated RWA value, returned/burned INC, cycle counts and participation; feed includes cycle/claim/burn/return events without full wallet addresses/private balances/workspace IDs.
+- New tiers: Common60%/$1–10, Rare25%/$10–30, Epic11%/$30–100, Legendary4%/$100–500. Tier and asset draws independent, amount uniformly chosen in cents inside tier range. Boundaries may overlap between displayed tier ranges; stored tier determines rarity. Asset odds unchanged25/20/20/20/15. All pod styles/INC commitments use same distribution.
+- `/docs` seven-section technical field guide: overview, cycle, rarity matrix, asset universe, tokenomics, wallet connection, FAQ. Sticky index/anchors, original 3D pod, responsive tier grid. `/protocol` redirects toDocs. No invented APYs, on-chain proofs, burn transaction IDs, or non-custodial guarantees from design-agent suggested copy were implemented.
+- Wallet Holdings replaces My Incubations; new Reward cards tab. No personal-pronoun site copy; standard SIWE message necessarily retains specification wording outside app copy.
+- Explicit Create reward card action publishes only an owned claimed allocation. Public immutable snapshot in `shared_rewards`, idempotent runID/publicID indices. Includes shortened wallet label but never balance/full address. Anonymous public permalink `/rewards/{public_id}`.
+- PNG1000×1200 artwork, tier colors, RWA symbol/value, cycle serial/date and75/25breakdown. Download real PNG, native file sharing where supported, otherwise immediate clipboard link; explicit copy/link field available. PNG cached before user interaction to preserve browser activation.
+- Wallet session lifecycle serialized across disconnect/reconnect; private dialogs close on session loss; modal close callbacks instance-scoped; epoch guards reject stale account responses and public refresh cannot incorrectly fail successful authentication.
+
+### Integration issue found and fixed
+- Confirmed infrastructure rewrites inbound public Origin to the exact configured cluster proxy origin. Strict original Origin-only check initiallyblockedauth; fixed with an explicit ASGI origin adapter solely for CORS compatibility, never identity authorization.
+- APP_ORIGIN/APP_DOMAIN remain public SIWE identity. New APP_PROXY_ORIGIN is exact observed transport origin; no wildcards or forwarded-host trust.
+- Added HMAC signed session-bound double-submit CSRF to ALL mutations, including wallet auth/logout. `GET /auth/csrf` uses Secure HttpOnly `__Host-inc_browser` preauth seed and `__Host-inc_csrf`; token binds the actual session after verify. Browser cross-site and same-site Fetch Metadata changes rejected. Axios loads/refreshes CSRF tokens with one bounded retry.
+- Edge normalizes SameSite cookies to None+Partitioned; Secure/HttpOnly remain. CSRF HMAC, host-prefixed cookies, Fetch Metadata, exact public-domain CORS, signature and workspace-owner checks remain enforced independently of SameSite.
+
+### Tests / remaining final verification
+- Frontend production build and Python compile passed. Docs/tiers/providerless desktop1920×800 and mobile390×844 screenshots: zero horizontal overflow.
+- Iteration3 exposed origin transport issue above; iteration4 backend17/17 passed afterfix. Actual signatures tested cryptographically using disposable Ethereum keys and TEST-ONLY injected browser provider; real MetaMask extension not installed in automation browser and not claimed physically tested.
+- Iteration4 browser completed connect→Buy100INC→Skip2h→reveal→claim→publish→PNGdownload, public share and Docs. Exported PNG confirmed1000×1200 and nonblank.
+- Two iteration4 intermittent UI cases (rapid modal reopen after reconnect, Share fallback timing) addressed by lifecycle serialization/instance close and prebuilt share file. Focused retest pending before finish.
+- Historical anonymous regression test module explicitly skipped as superseded; signed-wallet regression suite is current.
+- Retained test public reward for visual QA: `/rewards/960d54ba07e14968b27b55efe80c4f08`, downloaded PNG `/app/test_reports/iteration4_reward_card_download.png`.
+
+### Current backlog
+- P0: Finish focused verification of repeated wallet connect/disconnect and share clipboard/native branches.
+- P1 optional: reward editor, expanded asset selection, community rarity filters.
+- P2 optional: collection milestones, reward card themes, Indonesian/English toggle.
+- Real blockchain transactions remain expressly out of scope; do not add without a new user request and verified integrations.

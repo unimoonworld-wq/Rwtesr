@@ -7,6 +7,10 @@ class Reward(BaseModel):
     amount: float
     quantity: float
     reference_price: float
+    tier: str = 'legacy'
+    tier_odds: float = 0
+    tier_min: float = 0
+    tier_max: float = 0
 
 
 class Incubation(BaseModel):
@@ -34,6 +38,7 @@ class Event(BaseModel):
 
 class DemoState(BaseModel):
     id: str
+    wallet_address: Optional[str] = None
     version: int = 0
     balance: float = 10000
     cost: int = 100
@@ -50,3 +55,35 @@ class StartRequest(BaseModel):
 
 class SettingsRequest(BaseModel):
     cost: int = Field(ge=1, le=100000)
+
+
+class ProtocolStats(BaseModel):
+    locked: float = 0
+    rewards: float = 0
+    burned: float = 0
+    returned: float = 0
+    cycles: int = 0
+    active: int = 0
+    completed: int = 0
+    wallets: int = 0
+
+
+class PublicProtocol(BaseModel):
+    stats: ProtocolStats
+    events: list[Event]
+
+
+class SharedReward(BaseModel):
+    public_id: str
+    run_id: str
+    symbol: str
+    asset_name: str
+    tier: str
+    tier_odds: float
+    amount: float
+    quantity: float
+    inc_committed: float
+    inc_returned: float
+    inc_burned: float
+    claimed_at: float
+    wallet_label: str

@@ -6,6 +6,16 @@ ASSETS = [
     {"symbol": "AAPL", "name": "Apple", "category": "Technology", "odds": 15, "min_reward": 5, "max_reward": 120, "price": 237.49, "change": 0.92, "color": "#cdd1d5"},
 ]
 
+TIERS = [
+    {'id': 'common', 'name': 'Common', 'odds': 60, 'min_reward': 1, 'max_reward': 10, 'color': '#a0b090'},
+    {'id': 'rare', 'name': 'Rare', 'odds': 25, 'min_reward': 10, 'max_reward': 30, 'color': '#70dce4'},
+    {'id': 'epic', 'name': 'Epic', 'odds': 11, 'min_reward': 30, 'max_reward': 100, 'color': '#ba95e1'},
+    {'id': 'legendary', 'name': 'Legendary', 'odds': 4, 'min_reward': 100, 'max_reward': 500, 'color': '#e9c567'},
+]
+# Every asset is eligible for every rarity; tier, not ticker, sets the value.
+for asset in ASSETS:
+    asset.update(min_reward=1, max_reward=500)
+
 PODS = [
     {"id": "core-01", "name": "Core", "serial": "001", "family": "Core", "color": "#b4ef63"},
     {"id": "prism-02", "name": "Prism", "serial": "002", "family": "Prism", "color": "#a7d8e4"},

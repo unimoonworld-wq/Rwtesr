@@ -1,40 +1,21 @@
-import { useEffect, useState } from 'react';
-import { ArrowDownLeft, ArrowRight, Check, Clock3, Flame, Hexagon, Info, Loader2, Plus, RotateCcw, Settings2, Sparkles, Wallet } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { AssetIcon } from './Common';
-import { PodScene } from './PodScene';
-import { useDemo, money, number } from '../lib/demo';
-import { toast } from 'sonner';
+import { useDemo } from '../lib/demo';
+import { WalletConnect } from './WalletConnect';
+import { RewardCard } from './RewardCard';
+import { RewardReveal } from './RewardReveal';
+import { AllocationPanel, SettingsPanel, WalletPanel } from './WalletPanels';
 
-export const AppDialogs = ({ dialog, onClose }) => {
+export const AppDialogs = ({ dialog, onClose, onConnected, onShare }) => {
+  const { wallet } = useDemo();
   if (!dialog) return null;
-  return <Dialog open onOpenChange={open => !open && onClose()}><DialogContent className="inc-dialog" data-testid={`${dialog.type}-dialog`}><DialogBody key={`${dialog.type}-${dialog.pod?.id || dialog.run?.id || ''}`} dialog={dialog} onClose={onClose}/></DialogContent></Dialog>;
+  const type = dialog.type;
+  if (!wallet && !['connect', 'share'].includes(type)) return null;
+  return <Dialog open onOpenChange={open => !open && onClose()}><DialogContent className={`inc-dialog ${type === 'share' ? 'share-dialog' : ''}`} data-testid={`${type}-dialog`}>
+    {type === 'connect' && <WalletConnect onConnected={onConnected}/>}
+    {type === 'start' && <AllocationPanel pod={dialog.pod} onClose={onClose}/>}
+    {type === 'reveal' && <RewardReveal run={dialog.run} onClose={onClose} onShare={onShare}/>}
+    {type === 'settings' && <SettingsPanel onClose={onClose}/>}
+    {type === 'wallet' && <WalletPanel onClose={onClose}/>}
+    {type === 'share' && <><div className="dialog-eyebrow">INC.HOOD / COMMUNITY COLLECTIBLE</div><DialogTitle data-testid="share-title">A cycle worth sharing.</DialogTitle><DialogDescription>Published allocation card. Ready to download and share.</DialogDescription><RewardCard card={dialog.card}/></>}
+  </DialogContent></Dialog>;
 };
-
-const DialogBody = ({ dialog, onClose }) => {
-  const { state, catalog, busy, action } = useDemo();
-  const navigate = useNavigate();
-  const [amount, setAmount] = useState(String(state.cost));
-  const [confirmReset, setConfirmReset] = useState(false);
-  const [revealed, setRevealed] = useState(false);
-  const [revealing, setRevealing] = useState(false);
-  const [claimed, setClaimed] = useState(false);
-  useEffect(() => { if (!revealing) return; const timer = setTimeout(() => { setRevealing(false); setRevealed(true); }, 1000); return () => clearTimeout(timer); }, [revealing]);
-  const valid = Number.isInteger(Number(amount)) && Number(amount) >= 1 && Number(amount) <= 100000;
-  const input = <div className="amount-field"><label htmlFor="inc-amount" data-testid="inc-amount-label">{dialog.type === 'settings' ? 'Default incubation amount' : 'Incubation amount'}</label><div className="amount-input-wrap"><Hexagon size={19}/><Input type="number" id="inc-amount" min="1" max="100000" step="1" value={amount} onChange={e => setAmount(e.target.value)} data-testid="inc-amount-input"/><span>INC</span></div>{!valid && <p className="input-error" data-testid="inc-amount-error">Enter a whole number from 1 to 100,000.</p>}</div>;
-  if (dialog.type === 'start') return <>
-    <div className="dialog-eyebrow"><span className="tiny-dot"/>NEW INCUBATION / {dialog.pod.serial}</div><DialogTitle data-testid="start-dialog-title">A new cycle begins.</DialogTitle><DialogDescription data-testid="start-dialog-description">{dialog.pod.name} series · Quantum incubation pod</DialogDescription><div className="dialog-pod"><PodScene color={dialog.pod.color} testId="start-dialog-pod"/><span className="dialog-pod-meta">INC / {dialog.pod.serial}</span><span className="dialog-pod-time"><Clock3 size={13}/>02:00:00</span></div>{input}<div className="available-balance" data-testid="start-available-balance">Available balance <span>{number(state.balance)} INC</span></div><Breakdown amount={valid ? Number(amount) : 0}/><div className="dialog-note" data-testid="start-pool-note"><Info size={14}/><span>One random RWA reward per cycle. All pod series share the same odds.</span></div>{valid && Number(amount) > state.balance && <p className="input-error" data-testid="insufficient-balance-error">Insufficient INC. Add INC from your balance panel.</p>}<Button className="dialog-primary" disabled={busy || !valid || Number(amount) > state.balance} data-testid="start-incubation-action-button" onClick={async () => { if (await action('start', { pod_id: dialog.pod.id, amount: Number(amount) })) { toast.success('Incubation started. Your 2-hour cycle is running.'); onClose(); } }}>{busy ? <Loader2 className="animate-spin"/> : <Hexagon size={17}/>}Start incubation · {number(valid ? Number(amount) : 0)} INC<ArrowRight size={17}/></Button>
-  </>;
-  if (dialog.type === 'reveal') {
-    const run = state.runs.find(r => r.id === dialog.run.id) || dialog.run;
-    const asset = catalog.assets.find(a => a.symbol === run.reward?.symbol);
-    return <><div className="dialog-eyebrow"><Sparkles size={13}/>CYCLE COMPLETE / REWARD READY</div><DialogTitle data-testid="reveal-dialog-title">{revealed ? 'Meet your next asset.' : 'Potential, unlocked.'}</DialogTitle><DialogDescription data-testid="reveal-dialog-description">Your incubation is complete. The next reveal is yours.</DialogDescription><div className={`reward-reveal ${revealing ? 'is-revealing' : ''}`} data-testid="reward-reveal-stage">{revealed ? <><AssetIcon symbol={asset.symbol}/><span className="reward-symbol" data-testid="reward-symbol">{asset.symbol}</span><span className="reward-name" data-testid="reward-name">{asset.name} · RWA</span><strong data-testid="reward-amount">{money(run.reward.amount)}</strong><span className="reward-quantity" data-testid="reward-quantity">{run.reward.quantity.toFixed(6)} units</span></> : <><div className="mystery-mark"><Hexagon size={92} strokeWidth={.8}/><span>{revealing ? <Loader2 className="animate-spin" size={25}/> : '?'}</span></div><span className="reward-prompt">{revealing ? 'DECODING YOUR REWARD...' : 'ONE POD. A NEW POSSIBILITY.'}</span></>}</div><Breakdown amount={run.amount} settled/>{!revealed ? <Button className="dialog-primary" disabled={revealing} onClick={() => setRevealing(true)} data-testid="reveal-reward-button"><Sparkles size={17}/>{revealing ? 'Revealing...' : 'Reveal my RWA'}<ArrowRight size={17}/></Button> : claimed || run.status === 'claimed' ? <><div className="claim-success" data-testid="claim-success"><Check size={17}/>Reward added to your portfolio</div><Button className="dialog-primary" onClick={() => { onClose(); navigate('/incubations'); }} data-testid="view-portfolio-button">View my portfolio<ArrowRight size={16}/></Button></> : <Button className="dialog-primary" disabled={busy} onClick={async () => { if (await action(`claim/${run.id}`)) { setClaimed(true); toast.success(`${asset.symbol} added to your portfolio`); } }} data-testid="claim-rwa-reward-button">{busy ? <Loader2 className="animate-spin"/> : <Sparkles size={16}/>}Claim {asset.symbol} reward<ArrowRight size={16}/></Button>}</>;
-  }
-  if (dialog.type === 'settings') return <><div className="dialog-eyebrow" data-testid="settings-eyebrow"><Settings2 size={14}/>INCUBATION PARAMETERS</div><DialogTitle data-testid="settings-dialog-title">Your cycle. Your pace.</DialogTitle><DialogDescription data-testid="settings-description">Active incubations keep their original amount.</DialogDescription>{input}<div className="settings-rule"><Clock3 size={16}/><span>Incubation duration</span><b>2 hours</b></div><div className="settings-rule"><ArrowDownLeft size={16}/><span>INC return / burn</span><b>75% / 25%</b></div><Button className="dialog-primary" disabled={!valid || busy} data-testid="save-settings-button" onClick={async () => { if (await action('settings', { cost: Number(amount) }, 'patch')) { toast.success('Incubation amount updated'); onClose(); } }}><Check size={16}/>Save settings</Button><div className="reset-section"><div><b>Reset workspace</b><p>Clear cycles, assets, and history. Restore 10,000 INC.</p></div>{confirmReset ? <div className="reset-confirm"><p data-testid="reset-confirm-message">Permanently clear this workspace?</p><Button variant="outline" disabled={busy} onClick={() => setConfirmReset(false)} data-testid="cancel-reset-button">Cancel</Button><Button variant="destructive" disabled={busy} onClick={async () => { if (await action('reset')) { toast.success('Workspace reset. A fresh start.'); onClose(); } }} data-testid="confirm-reset-button">Reset everything</Button></div> : <button className="text-button orange" disabled={busy} onClick={() => setConfirmReset(true)} data-testid="reset-demo-button"><RotateCcw size={14}/>Reset workspace</button>}</div></>;
-  return <><div className="dialog-eyebrow" data-testid="wallet-eyebrow"><Wallet size={14}/>INC BALANCE</div><DialogTitle data-testid="wallet-dialog-title">Fuel for your next cycle.</DialogTitle><DialogDescription data-testid="wallet-description">Your available INC, active commitments, and total burn.</DialogDescription><div className="wallet-amount" data-testid="wallet-balance">{number(state.balance)}<span>INC</span></div><div className="settings-rule"><Hexagon size={16}/><span>Currently locked</span><b data-testid="wallet-locked">{number(state.runs.filter(r => r.status === 'incubating').reduce((a, r) => a + r.amount, 0))} INC</b></div><div className="settings-rule"><Flame size={16}/><span>Total burned</span><b className="orange">{number(state.total_burned)} INC</b></div><Button className="dialog-primary" disabled={busy} onClick={async () => { if (await action('top-up')) toast.success('10,000 INC added to your balance'); }} data-testid="buy-inc-demo-button"><Plus size={17}/>Add 10,000 INC</Button><Button variant="outline" onClick={() => { onClose(); navigate('/incubations'); }} data-testid="wallet-portfolio-link">My portfolio<ArrowRight size={16}/></Button></>;
-};
-
-const Breakdown = ({ amount, settled = false }) => <div className="breakdown"><div><span><ArrowDownLeft size={14}/>{settled ? 'INC returned' : 'INC returned after 2h'}</span><strong data-testid="breakdown-return">{number(amount * .75)} INC <small>75%</small></strong></div><div><span><Flame size={14}/>{settled ? 'INC burned' : 'Permanent INC burn'}</span><strong data-testid="breakdown-burn">{number(amount * .25)} INC <small>25%</small></strong></div></div>;

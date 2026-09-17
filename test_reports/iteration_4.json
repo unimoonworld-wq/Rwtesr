@@ -1,0 +1,77 @@
+{
+  "summary": "Retested wallet-auth/CSRF protocol after origin adapter fix. Backend regression suite passes end-to-end (17/17). UI flow now reaches connect->buy->skip->reveal->claim->share/download with TEST-ONLY injected EIP-1193 provider and real cryptographic personal_sign via in-browser ethers wallet.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "Wallet dialog reopen/disconnect sequence",
+        "issue": "Intermittent automation failure reopening wallet dialog after reconnect; disconnect control becomes non-deterministic to access in repeated modal cycles.",
+        "selector": "[data-testid='wallet-open-button'], [data-testid='disconnect-wallet-button']",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [
+      {
+        "flow": "Share button clipboard fallback",
+        "issue": "In one successful share-card run, Share button did not populate mocked clipboard immediately, while explicit Copy button worked with same URL.",
+        "affected_selectors": [
+          "[data-testid='share-card-share']",
+          "[data-testid='share-card-copy']",
+          "[data-testid='share-card-url']"
+        ]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "Docs desktop/mobile and shared reward page",
+        "issues": [
+          "No horizontal overflow observed at 390x844 and 1920x800 in tested states.",
+          "Header Docs visibility is clear on desktop/mobile in tested screenshots."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_wallet_auth_protocol_regression.py",
+    "/app/test_reports/pytest/pytest_results_iteration_4.xml"
+  ],
+  "action_items": [
+    "Investigate wallet dialog reopen/disconnect reliability after repeated reconnect cycles.",
+    "Verify Share button fallback-to-clipboard behavior consistency (Copy works; Share fallback looked inconsistent once).",
+    "Main visual check public reward card using retained public_id: 960d54ba07e14968b27b55efe80c4f08"
+  ],
+  "critical_code_review_comments": [
+    "Legacy test file /app/backend/tests/test_demo_api_regression.py still reflects anonymous session behavior and should be replaced/retired for wallet-bound model.",
+    "Runtime Set-Cookie observed as SameSite=None; Partitioned on deployed edge while code sets lax. Security still preserved (Secure+HttpOnly+Path=/api), but edge normalization should be reviewed for expected browser behavior."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_wallet_auth_protocol_regression.py",
+    "/app/test_reports/iteration_4.json",
+    "/app/test_reports/iteration4_public_reward_id.txt"
+  ],
+  "success_rate": {
+    "backend": "100%",
+    "frontend": "85%"
+  },
+  "seed_data_creation": "Created disposable wallet-bound workspaces/runs via API and one retained shared reward token for manual QA: 960d54ba07e14968b27b55efe80c4f08",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Auth CSRF/session binding now validated with same-session GET /api/auth/csrf before every mutation. One retained public share link exists for visual pass. UI connect/reveal/share path works with TEST-ONLY injected provider (no real MetaMask extension in CI).",
+  "rca of the issue": "Original blocker (origin mismatch) is resolved. Remaining UI issues appear around modal lifecycle timing (wallet dialog reopen after reconnect) and possible Share->clipboard fallback timing inconsistency. Repro: run rapid reconnect/disconnect cycles and verify share fallback clipboard mutation right after share click.",
+  "artifacts": {
+    "screenshots": [
+      "/app/test_reports/iteration4_quick_load_desktop.jpeg",
+      "/app/test_reports/iteration4_reward_modal.jpeg",
+      "/app/test_reports/iteration4_wallet_panel_address.jpeg",
+      "/app/test_reports/iteration4_cards_tab.jpeg",
+      "/app/test_reports/iteration4_docs_desktop_1920x800.jpeg",
+      "/app/test_reports/iteration4_docs_mobile_390x844.jpeg",
+      "/app/test_reports/iteration4_public_share_view.jpeg"
+    ],
+    "downloaded_png": "/app/test_reports/iteration4_reward_card_download.png",
+    "retained_public_id": "960d54ba07e14968b27b55efe80c4f08"
+  }
+}

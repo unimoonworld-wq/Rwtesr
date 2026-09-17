@@ -4,7 +4,7 @@ import time
 import uuid
 from fastapi import HTTPException
 from models import DemoState
-from catalog import ASSETS
+from catalog import ASSETS, TIERS
 
 random = secrets.SystemRandom()
 
@@ -20,15 +20,17 @@ def settle(state):
         if run['status'] != 'incubating' or run['completes_at'] > time.time():
             continue
         asset = random.choices(ASSETS, weights=[a['odds'] for a in ASSETS], k=1)[0]
-        amount = random.randint(asset['min_reward'] * 100, asset['max_reward'] * 100) / 100
+        tier = random.choices(TIERS, weights=[t['odds'] for t in TIERS], k=1)[0]
+        amount = random.randint(tier['min_reward'] * 100, tier['max_reward'] * 100) / 100
         run.update(status='ready', returned=run['amount'] * .75, burned=run['amount'] * .25,
                    reward={'symbol': asset['symbol'], 'amount': amount,
-                           'quantity': round(amount / asset['price'], 8), 'reference_price': asset['price']})
+                           'quantity': round(amount / asset['price'], 8), 'reference_price': asset['price'],
+                           'tier': tier['id'], 'tier_odds': tier['odds'], 'tier_min': tier['min_reward'], 'tier_max': tier['max_reward']})
         state['balance'] += run['returned']
         state['total_returned'] += run['returned']
         state['total_burned'] += run['burned']
         event(state, 'ready', f"{run['pod_id'].upper()} incubation complete", amount, asset['symbol'])
-        event(state, 'return', '75% INC returned to your balance', run['returned'], 'INC')
+        event(state, 'return', '75% INC returned to wallet balance', run['returned'], 'INC')
         event(state, 'burn', '25% INC permanently removed from supply', run['burned'], 'INC')
 
 

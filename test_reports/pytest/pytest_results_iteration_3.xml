@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="13" time="4.532" timestamp="2026-09-17T16:21:44.647824+00:00" hostname="agent-env-79d7181e-b29e-4cfd-a22b-792291736d91"><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_wallet_auth_happy_path_cookie_and_restore" time="0.337"><failure message="AssertionError: {&quot;detail&quot;:&quot;Request origin not allowed&quot;}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403]&gt;.status_code">backend/tests/test_wallet_auth_protocol_regression.py:76: in test_wallet_auth_happy_path_cookie_and_restore
+    session, account, verified, _ = _auth_wallet(base_url, app_origin)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_wallet_auth_protocol_regression.py:62: in _auth_wallet
+    assert challenge.status_code == 200, challenge.text
+E   AssertionError: {"detail":"Request origin not allowed"}
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403]&gt;.status_code</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_verify_sets_secure_cookie_attributes" time="0.164"><failure message="KeyError: 'message'">backend/tests/test_wallet_auth_protocol_regression.py:103: in test_verify_sets_secure_cookie_attributes
+    message = challenge.json()['message']
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'message'</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_verify_rejects_invalid_signature" time="0.228"><failure message="KeyError: 'message'">backend/tests/test_wallet_auth_protocol_regression.py:129: in test_verify_rejects_invalid_signature
+    message = challenge.json()['message']
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'message'</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_verify_rejects_replay" time="0.142"><failure message="KeyError: 'message'">backend/tests/test_wallet_auth_protocol_regression.py:148: in test_verify_rejects_replay
+    message = challenge.json()['message']
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'message'</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_verify_rejects_altered_message" time="0.158"><failure message="KeyError: 'message'">backend/tests/test_wallet_auth_protocol_regression.py:174: in test_verify_rejects_altered_message
+    original = challenge.json()['message']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'message'</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_verify_rejects_expired_nonce" time="0.206"><failure message="KeyError: 'message'">backend/tests/test_wallet_auth_protocol_regression.py:193: in test_verify_rejects_expired_nonce
+    message = challenge.json()['message']
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'message'</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_private_routes_reject_unauthenticated" time="0.545"><failure message="assert False&#10; +  where False = all(&lt;generator object test_private_routes_reject_unauthenticated.&lt;locals&gt;.&lt;genexpr&gt; at 0xfd0921040a00&gt;)">backend/tests/test_wallet_auth_protocol_regression.py:217: in test_private_routes_reject_unauthenticated
+    assert all(r.status_code == 401 for r in no_auth_with_origin)
+E   assert False
+E    +  where False = all(&lt;generator object test_private_routes_reject_unauthenticated.&lt;locals&gt;.&lt;genexpr&gt; at 0xfd0921040a00&gt;)</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_post_patch_require_origin_even_when_authenticated" time="0.186"><failure message="AssertionError: {&quot;detail&quot;:&quot;Request origin not allowed&quot;}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403]&gt;.status_code">backend/tests/test_wallet_auth_protocol_regression.py:221: in test_post_patch_require_origin_even_when_authenticated
+    session, _, verified, _ = _auth_wallet(base_url, app_origin)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_wallet_auth_protocol_regression.py:62: in _auth_wallet
+    assert challenge.status_code == 200, challenge.text
+E   AssertionError: {"detail":"Request origin not allowed"}
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403]&gt;.status_code</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_workspace_isolation_between_two_wallets" time="0.154"><failure message="AssertionError: {&quot;detail&quot;:&quot;Request origin not allowed&quot;}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403]&gt;.status_code">backend/tests/test_wallet_auth_protocol_regression.py:238: in test_workspace_isolation_between_two_wallets
+    wallet_a, _, a_verified, _ = _auth_wallet(base_url, app_origin)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_wallet_auth_protocol_regression.py:62: in _auth_wallet
+    assert challenge.status_code == 200, challenge.text
+E   AssertionError: {"detail":"Request origin not allowed"}
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403]&gt;.status_code</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_public_protocol_aggregates_wallets_without_private_leaks" time="0.512"><failure message="AssertionError: {&quot;detail&quot;:&quot;Request origin not allowed&quot;}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403]&gt;.status_code">backend/tests/test_wallet_auth_protocol_regression.py:270: in test_public_protocol_aggregates_wallets_without_private_leaks
+    wallet_a, _, a_verified, _ = _auth_wallet(base_url, app_origin)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_wallet_auth_protocol_regression.py:62: in _auth_wallet
+    assert challenge.status_code == 200, challenge.text
+E   AssertionError: {"detail":"Request origin not allowed"}
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403]&gt;.status_code</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_catalog_tiers_and_asset_distribution" time="0.160" /><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_share_reward_idempotent_and_public_link" time="0.140"><failure message="AssertionError: {&quot;detail&quot;:&quot;Request origin not allowed&quot;}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403]&gt;.status_code">backend/tests/test_wallet_auth_protocol_regression.py:331: in test_share_reward_idempotent_and_public_link
+    wallet_a, _, a_verified, _ = _auth_wallet(base_url, app_origin)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_wallet_auth_protocol_regression.py:62: in _auth_wallet
+    assert challenge.status_code == 200, challenge.text
+E   AssertionError: {"detail":"Request origin not allowed"}
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403]&gt;.status_code</failure></testcase><testcase classname="tests.test_wallet_auth_protocol_regression" name="test_public_reward_not_found_message" time="0.142" /></testsuite></testsuites>
