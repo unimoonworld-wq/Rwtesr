@@ -1,0 +1,123 @@
+{
+  "project_name": "Inc.hood",
+  "tagline": "Real World Asset (RWA) Incubation Protocol on Robinhood Chain",
+  "app_type": "Financial Incubation Dashboard / Pro Web3 Interface",
+  "disclaimer": "Inc.hood is a community prototype designed for Robinhood Chain. Not officially affiliated with Robinhood. All assets in demo mode.",
+  "archetype": "THE PERFORMANCE PRO / SWISS BRUTALIST HYBRID",
+  "theme": "Dark Terminal & Tactical Pro",
+  "colors": {
+    "background": "#0A0B0E",
+    "surface": "#12141A",
+    "surface_elevated": "#1A1D26",
+    "border_subtle": "rgba(255, 255, 255, 0.08)",
+    "border_active": "rgba(0, 200, 5, 0.4)",
+    "brand_primary": "#00C805",
+    "brand_secondary": "#00E676",
+    "robinhood_green": "#00C805",
+    "gold_amber": "#FFB800",
+    "danger_burn": "#FF3B30",
+    "text_primary": "#F3F4F6",
+    "text_secondary": "#9CA3AF",
+    "text_muted": "#6B7280"
+  },
+  "typography": {
+    "headline_font": "Outfit, sans-serif",
+    "body_font": "Manrope, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "scale": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
+      "h2": "text-xl sm:text-2xl font-bold tracking-tight",
+      "h3": "text-lg font-semibold",
+      "body": "text-sm text-gray-300",
+      "caption": "text-xs text-gray-400 font-mono"
+    }
+  },
+  "layout_and_structure": {
+    "max_width": "max-w-6xl mx-auto px-4 sm:px-6",
+    "header": "Sticky glassmorphic top header (bg-[#0A0B0E]/80 backdrop-blur-md border-b border-white/10 z-50)",
+    "ticker": "Live Robinhood Chain RWA Price & Network Metrics Marquee Band",
+    "hero_zone": "Large 'THE ZONE' heading, Robinhood Chain badge, protocol TVL, total burned INC, active incubations counter",
+    "filters": "Tabs for All Incubators, Tier 1 (Apex), Tier 2 (Prime), Tier 3 (Core), Active, Completed",
+    "incubator_grid": "Grid of 3D-styled Quantum Incubation Pods (replacing legacy pokeballs with high-tech hardware pods)",
+    "sidebar_drawer": "Incubation Config Modal & Live Status Drawer",
+    "demo_control": "Floating or Header Action: 'Fast-Forward Demo (Skip 2 Hours)' with editable demo INC balance & cost adjuster"
+  },
+  "key_mechanics": {
+    "token_name": "INC Token",
+    "chain": "Robinhood Chain (Testnet/Demo)",
+    "incubation_period_hours": 2,
+    "fast_forward_demo_enabled": true,
+    "token_return_rate": 0.75,
+    "token_burn_rate": 0.25,
+    "rwa_pool": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA RWA Share",
+        "tier": "Apex Tier",
+        "odds_percent": 25,
+        "nominal_range_usd": [15, 250],
+        "color": "#76B900"
+      },
+      {
+        "symbol": "GME",
+        "name": "GameStop RWA Share",
+        "tier": "Prime Tier",
+        "odds_percent": 20,
+        "nominal_range_usd": [10, 180],
+        "color": "#FF2E00"
+      },
+      {
+        "symbol": "GLD",
+        "name": "SPDR Gold Trust RWA",
+        "tier": "Apex Tier",
+        "odds_percent": 20,
+        "nominal_range_usd": [20, 300],
+        "color": "#FFD700"
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla RWA Share",
+        "tier": "Prime Tier",
+        "odds_percent": 20,
+        "nominal_range_usd": [10, 200],
+        "color": "#E82127"
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple RWA Share",
+        "tier": "Core Tier",
+        "odds_percent": 15,
+        "nominal_range_usd": [5, 120],
+        "color": "#A2AAAD"
+      }
+    ]
+  },
+  "component_path": "/app/frontend/src/App.js",
+  "data_testids": {
+    "header_brand": "inc-hood-brand-logo",
+    "chain_badge": "robinhood-chain-badge",
+    "zone_title": "zone-hero-title",
+    "inc_balance": "inc-token-balance-display",
+    "buy_inc_btn": "buy-inc-demo-button",
+    "incubator_card": "incubator-unit-card",
+    "start_incubation_btn": "start-incubation-action-button",
+    "fast_forward_btn": "demo-fast-forward-button",
+    "claim_reward_btn": "claim-rwa-reward-button",
+    "active_incubations_tab": "tab-active-incubations",
+    "my_portfolio_tab": "tab-my-portfolio",
+    "burn_metric": "total-inc-burned-metric"
+  },
+  "image_urls": {
+    "gold_rwa": "https://images.unsplash.com/photo-1643656350988-a39ad266a178?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "stock_chart_dark": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "crypto_chart": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the Inc.hood branding: replace all pokeball/pokemon references with Quantum Incubation Pods (hardware pods for RWA yield synthesis).",
+    "Ensure the Robinhood Chain aesthetic is present (sharp neon green accent #00C805, obsidian dark background, high precision metrics).",
+    "Provide interactive demo capabilities: editable INC balance, fast-forward 2-hour incubation, instant RWA reveal animation with random nominal values.",
+    "Include explicit 75% return / 25% burn calculation and breakdown modal when incubation completes.",
+    "Add testid attributes (data-testid) to all key interactive elements and state displays.",
+    "Implement Sonner toasts for incubation status, rewards, and demo settings updates."
+  ]
+}
